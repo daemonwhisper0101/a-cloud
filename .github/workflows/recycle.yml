@@ -1,0 +1,29 @@
+name: recycle
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-recycle:
+    runs-on: ubuntu-latest
+    env:
+      name: recycle
+    steps:
+      - name: cloud code
+        uses: actions/checkout@v4
+      - name: infra code
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ secrets.INFRA_REPO }}
+          path: ./.infra
+          ssh-key: ${{ secrets.INFRA_KEY }}
+      - name: infra setup
+        run: ./.infra/bin/setup.sh
+      - name: prepare
+        run: ./.infra/bin/prepare.sh
+      - name: run
+        run: ./.infra/bin/run.sh
+      - name: post
+        run: ./.infra/bin/post.sh
+      - name: delayed task
+        run: sleep 10
